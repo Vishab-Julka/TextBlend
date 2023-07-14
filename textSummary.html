@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Summarization</title>
+    <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.20.0/full/pyodide.js"></script>
+    <style>
+          button{
+        border:none;
+        background-color: cadetblue;
+        color:#fff;
+        padding:10px 20px;
+        font-size:16px;
+        margin:-300px 700px;
+        cursor: pointer;
+    }
+    </style>
+    
+</head>
+
+<body>
+
+    <header style="background-color: #0b90a7;"
+        class="fixed inset-0 w-full flex flex-col justify-center justify-items-center content-center h-20 rounded-b-lg">
+        <div class="self-center text-white">
+            <h1 style="font-size: 40px;"><b>Text Summarization</b></h1>
+        </div>
+    </header>
+
+    <section class="flex flex-wrap mt-20 w-full">
+        <div class="w-full md:w-1/2">
+            <form class="w-full flex flex-col md:h-screen" >
+                <textarea class="w-11/12 md:h-3/4 m-2 p-2 border-black rounded-lg border self-center justify-center"
+                    name="data" id="data" cols="30" rows="10" placeholder="Enter your Data"
+                    required="required" style="background-color:whitesmoke;"></textarea>
+                <!-- <div class="flex self-center">
+                    <button class="m-1 bg-green-500 hover:bg-blue-700 text-white font-semi-bold py-2 px-4 rounded-lg"
+                        type="submit" onclick="Check()">Submit</button>
+                    <button class="m-1 bg-red-500 hover:bg-blue-700 text-white font-semi-bold py-2 px-4 rounded-lg"
+                        type="reset">Clear</button>
+                </div> -->
+            </form>
+        </div>
+        <div class="w-full md:w-1/2">
+            <div class="mt-2 flex flex-col w-full md:h-screen">
+                <textarea style="background-color: #EDFFD2;"
+                    class="w-11/12 border-green-600 rounded-lg p-2 border self-center justify-center md:h-3/4" rows="10"
+                    cols="30" name="result" id="finaldata" readonly placeholder="Your Summary">
+                </textarea>
+            </div>
+        </div>
+    </section>
+    <button id="Insbtn">INSERT</button>
+
+    <script>
+        window.onload = function () {
+            // Retrieve
+            document.getElementById("data").innerHTML = localStorage.getItem("text");
+            datasend = localStorage.getItem("text");
+            //console.log(data);
+        }
+
+        function inputText(result)
+        {
+            document.getElementById("finaldata").innerHTML = result;
+        }
+    </script>
+    <script>
+
+        var name = "Vishab";
+    
+    
+          async function main() {
+            let pyodide = await loadPyodide();
+            await pyodide.loadPackage("nltk");
+            await pyodide.loadPackage("numpy");
+            await pyodide.loadPackage("networkx");
+            pyodide.runPython(`
+            print('Hello world, from the browser!')
+    
+            import js
+            js.document.title = "Hello from Python"
+    
+            js.document.getElementById("finaldata").innerText = "Replaced by Python"
+
+            `);
+    
+            pyodide.runPython(`
+            from js import fetch
+            import nltk
+            import re
+            import js
+            from nltk.tokenize import sent_tokenize
+
+            text = js.localStorage.getItem("text");
+            print(text)
+            text1 = """ In an attempt to build an AI-ready workforce, Microsoft announced Intelligent Cloud Hub which has been launched to empower the next generation of students with AI-ready skills. Envisioned as a three-year collaborative program, Intelligent Cloud Hub will support around 100 institutions with AI infrastructure, course content and curriculum, developer support, development tools and give students access to cloud and AI services. As part of the program, the Redmond giant which wants to expand its reach and is planning to build a strong developer ecosystem in India with the program will set up the core AI infrastructure and IoT Hub for the selected campuses. The company will provide AI development tools and Azure AI services such as Microsoft Cognitive Services, Bot Services and Azure Machine Learning.According to Manish Prakash, Country General Manager-PS, Health and Education, Microsoft India, said, "With AI being the defining technology of our time, it is transforming lives and industry and the jobs of tomorrow will require a different skillset. This will require more collaborations and training and working with AI. That’s why it has become more critical than ever for educational institutions to integrate new cloud and AI technologies. The program is an attempt to ramp up the institutional set-up and build capabilities among the educators to educate the workforce of tomorrow." The program aims to build up the cognitive skills and in-depth understanding of developing intelligent cloud connected solutions for applications across industry. Earlier in April this year, the company announced Microsoft Professional Program In AI as a learning track open to the public. The program was developed to provide job ready skills to programmers who wanted to hone their skills in AI and data science with a series of online courses which featured hands-on labs and expert instructors as well. This program also included developer-focused AI school that provided a bunch of assets to help build AI skills. """
+            stopWords = ['ourselves', 'hers', 'between', 'yourself', 'but', 'again', 'there', 'about', 'once', 'during', 'out', 'very', 'having', 'with', 'they', 'own', 'an', 'be', 'some', 'for', 'do', 'its', 'yours', 'such', 'into', 'of', 'most', 'itself', 'other', 'off', 'is', 's', 'am', 'or', 'who', 'as', 'from', 'him', 'each', 'the', 'themselves', 'until', 'below', 'are', 'we', 'these', 'your', 'his', 'through', 'don', 'nor', 'me', 'were', 'her', 'more', 'himself', 'this', 'down', 'should', 'our', 'their', 'while', 'above', 'both', 'up', 'to', 'ours', 'had', 'she', 'all', 'no', 'when', 'at', 'any', 'before', 'them', 'same', 'and', 'been', 'have', 'in', 'will', 'on', 'does', 'yourselves', 'then', 'that', 'because', 'what', 'over', 'why', 'so', 'can', 'did', 'not', 'now', 'under', 'he', 'you', 'herself', 'has', 'just', 'where', 'too', 'only', 'myself', 'which', 'those', 'i', 'after', 'few', 'whom', 't', 'being', 'if', 'theirs', 'my', 'against', 'a', 'by', 'doing', 'it', 'how', 'further', 'was', 'here', 'than']
+            words = text.split()
+            print(words)
+    
+            freqTable = dict()
+            for word in words:
+              word = word.lower()
+              if word in stopWords:
+                continue
+              if word in freqTable:
+                freqTable[word] += 1
+              else:
+                freqTable[word] = 1
+            
+            sentences = re.compile('[.!?] ').split(text)
+            print(sentences)
+    
+            sentenceValue = dict()
+    
+            for sentence in sentences:
+              for word, freq in freqTable.items():
+                if word in sentence.lower():
+                  if sentence in sentenceValue:
+                    sentenceValue[sentence] += freq
+                  else:
+                    sentenceValue[sentence] = freq
+            
+            sumValues = 0
+            for sentence in sentenceValue:
+              sumValues += sentenceValue[sentence]
+            
+            average = int(sumValues / len(sentenceValue))
+            summary = ''
+            for sentence in sentences:
+              if (sentence in sentenceValue) and (sentenceValue[sentence] > (1.2 * average)):
+                summary += " " + sentence
+            
+            print(summary)
+            
+            
+            name = js.name
+            print(name, type(name))
+    
+            js.document.getElementById("finaldata").innerText = summary
+
+            js.localStorage.setItem("output", summary);
+
+            `);
+    
+          };
+    
+          main();
+    </script>
+
+    <script type="module">
+      
+      var counter = 1;
+      // Import the functions you need from the SDKs you need
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/9.21.0/firebase-app.js";
+      // TODO: Add SDKs for Firebase products that you want to use
+      // https://firebase.google.com/docs/web/setup#available-libraries
+
+      // Your web app's Firebase configuration
+      const firebaseConfig = {
+        apiKey: "AIzaSyAGDmkbsbIpWB8RTKYXPuYlK4a2B1r2snk",
+        authDomain: "videoapp-5b65d.firebaseapp.com",
+        projectId: "videoapp-5b65d",
+        storageBucket: "videoapp-5b65d.appspot.com",
+        messagingSenderId: "308511866794",
+        appId: "1:308511866794:web:68a71ea7e1d5ea4d7fb5d3"
+      };
+
+      // Initialize Firebase
+      const app = initializeApp(firebaseConfig);
+
+
+
+      import {getDatabase, ref,get, set, child, update, remove} from "https://www.gstatic.com/firebasejs/9.21.0/firebase-database.js";
+      const db = getDatabase();
+
+      var insBtn = document.getElementById("Insbtn");
+
+
+
+          //Through variable
+      function InsertData(){
+        var summarizedOutput = localStorage.getItem("output");
+        set(ref(db,"TheSummarizedText/"+ counter),{
+            text: summarizedOutput
+        })
+        .then(()=> {
+            alert("Data stored successfully");
+        })
+        .catch((error)=>{
+            alert("Unsuccessful, error"+error);
+        });
+
+        counter = counter + 1;
+      }
+
+
+      insBtn.addEventListener('click',InsertData);
+    </script>
+   
+</body>
+
+</html>

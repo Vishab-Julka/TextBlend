@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>Video chat Application</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel='stylesheet' type='text/css' media='screen' href='main.css'>
+    <script defer src="face-api.min.js"></script>
+    <script defer src="script.js"></script>
+    <style>
+
+        #video{
+          position: relative;
+        }
+    
+        canvas {
+          position: absolute;
+          top: 15px;
+          left: 120px;
+        }
+    
+        dialog {
+            margin: auto;
+            width: auto;
+          }
+
+      </style>
+</head>
+<body>
+
+    <button id="join-btn">Join Stream</button>
+
+    <div id="stream-wrapper" >
+        <div class="words" style="z-index: 99;position: absolute; bottom: 100px; left:200px" contenteditable>
+            <p id="p" style="background-color: white;"></p>
+        </div>
+        <div id="video-streams">
+          
+        </div>
+
+        <div id="stream-controls">
+            <button id="leave-btn">Leave Stream</button>
+            <button id="mic-btn">Mic On</button>
+            <button id="camera-btn">Camera on</button>
+            <button id="show">Show Face Detection</button>
+            <a href="textSummary.html"><button onclick="PassTheText()">Summarize Text</button></a>
+            
+        </div>
+
+        <div id="towrapthem" style="z-index: 999; position: absolute;bottom: 650px; left: 400px; width: 50%">
+          <center>
+            <dialog id="DialogExample">
+              <center>
+                <video id="video" width="520" height="360" autoplay muted></video>
+              </center>
+                <br>
+                <button id="hide">Close dialog box</button>
+            </dialog>
+          </center>
+        </div>
+        
+        
+    </div>
+
+
+    
+
+    
+    <script src="index.js"></script>
+    <script type="text/JavaScript">
+        (function() { var dialog = document.getElementById('DialogExample'); document.getElementById('show').onclick = function() { dialog.show(); }; document.getElementById('hide').onclick = function() { dialog.close(); }; })();
+    </script>
+    
+</body>
+
+<script src="AgoraRTC_N-4.7.3.js"></script>
+<script src='main.js'></script>
+</html>
